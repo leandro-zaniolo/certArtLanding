@@ -44,6 +44,7 @@
     }
 
     .card {
+      position: relative;
       width: 100%;
       max-width: 430px;
       background: var(--card);
@@ -51,7 +52,57 @@
       border-radius: 28px;
       box-shadow: var(--shadow);
       padding: clamp(16px, 4vw, 24px) clamp(16px, 4vw, 22px) clamp(16px, 4vw, 22px);
+      padding-top: clamp(42px, 8vw, 50px);
       text-align: center;
+    }
+
+    .lang-switch {
+      position: absolute;
+      top: clamp(12px, 3vw, 18px);
+      right: clamp(12px, 3.5vw, 20px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .lang-switch .lang-sep {
+      font-weight: 700;
+      opacity: 0.45;
+      user-select: none;
+    }
+
+    .lang-switch .lang-btn {
+      margin: 0;
+      padding: 4px 2px;
+      border: 0;
+      background: transparent;
+      font: inherit;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 6px;
+      opacity: 0.55;
+      text-decoration: none;
+    }
+
+    .lang-switch .lang-btn:hover {
+      opacity: 0.85;
+    }
+
+    .lang-switch .lang-btn.is-active {
+      opacity: 1;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .lang-switch .lang-btn:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
     }
 
     .logo-wrapper {
@@ -115,13 +166,31 @@
 </head>
 <body>
   <main class="card">
-    <div class="logo-wrapper">
-      <img src="assets/logo-certart.png?v=2" alt="Cer.Art — peças de cerâmica e artesanato" width="880" height="733" decoding="async" />
+    <div id="lang-switch" class="lang-switch" role="group" aria-label="Idioma">
+      <button type="button" class="lang-btn is-active" id="lang-pt" data-lang="pt" aria-pressed="true">PT</button>
+      <span class="lang-sep" aria-hidden="true">|</span>
+      <button type="button" class="lang-btn" id="lang-en" data-lang="en" aria-pressed="false">EN</button>
     </div>
 
-    <p>Peças de cerâmica e artesanato feitas com muito carinho, trazendo a magia do universo infantil e o encanto dos bichinhos de pano. Escolha um canal abaixo para comprar ou falar com a gente.</p>
+    <div class="logo-wrapper">
+      <img
+        id="logo-img"
+        src="assets/logo-certart.png?v=2"
+        alt="Cer.Art — peças de cerâmica e artesanato"
+        data-alt-pt="Cer.Art — peças de cerâmica e artesanato"
+        data-alt-en="Cer.Art — ceramic pieces and handicrafts"
+        width="880"
+        height="733"
+        decoding="async"
+      />
+    </div>
 
-    <section id="cta-links" class="links" aria-label="Links principais">
+    <p class="intro">
+      <span class="i18n i18n-pt">Peças de cerâmica e artesanato feitas com muito carinho, trazendo a magia do universo infantil e o encanto dos bichinhos de pano. Escolha um canal abaixo para comprar ou falar com a gente.</span>
+      <span class="i18n i18n-en" hidden>Ceramic pieces and handicrafts made with lots of love, bringing the magic of the children’s world and the charm of cloth dolls. Pick a channel below to shop or get in touch.</span>
+    </p>
+
+    <section id="cta-links" class="links" aria-label="Links principais" data-aria-pt="Links principais" data-aria-en="Main links">
       <a
         class="link-btn js-outbound-cta"
         href="https://br.shp.ee/tzdwR5fn"
@@ -157,6 +226,56 @@
     <footer>cer.art</footer>
   </main>
   <script>
+    (function () {
+      var metaDesc = document.querySelector('meta[name="description"]');
+      var titlePt = "Cer.Art | Links";
+      var titleEn = "Cer.Art | Links";
+      var descPt = "Links oficiais da Cer.Art: Shopee, WhatsApp e TikTok Shop.";
+      var descEn = "Official Cer.Art links: Shopee, WhatsApp, and Instagram.";
+      var btnPt = document.getElementById("lang-pt");
+      var btnEn = document.getElementById("lang-en");
+      var langSwitch = document.getElementById("lang-switch");
+      var section = document.getElementById("cta-links");
+      var logo = document.getElementById("logo-img");
+
+      function applyLang(lang) {
+        var isPt = lang !== "en";
+        document.documentElement.lang = isPt ? "pt-BR" : "en";
+        if (langSwitch) langSwitch.setAttribute("aria-label", isPt ? "Idioma" : "Language");
+        document.title = isPt ? titlePt : titleEn;
+        if (metaDesc) metaDesc.setAttribute("content", isPt ? descPt : descEn);
+
+        document.querySelectorAll(".i18n-pt").forEach(function (node) {
+          node.hidden = !isPt;
+        });
+        document.querySelectorAll(".i18n-en").forEach(function (node) {
+          node.hidden = isPt;
+        });
+
+        if (section) {
+          var label = isPt ? section.getAttribute("data-aria-pt") : section.getAttribute("data-aria-en");
+          if (label) section.setAttribute("aria-label", label);
+        }
+
+        if (logo) {
+          var alt = isPt ? logo.getAttribute("data-alt-pt") : logo.getAttribute("data-alt-en");
+          if (alt) logo.setAttribute("alt", alt);
+        }
+
+        [btnPt, btnEn].forEach(function (btn) {
+          if (!btn) return;
+          var active = (btn.getAttribute("data-lang") === "en") === !isPt;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      }
+
+      applyLang("pt");
+
+      if (btnPt) btnPt.addEventListener("click", function () { applyLang("pt"); });
+      if (btnEn) btnEn.addEventListener("click", function () { applyLang("en"); });
+    })();
+
     document.querySelectorAll(".js-outbound-cta").forEach(function (el) {
       el.addEventListener("click", function () {
         if (typeof gtag !== "function") return;
