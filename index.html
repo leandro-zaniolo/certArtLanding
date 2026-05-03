@@ -50,37 +50,29 @@
       border: 1px solid var(--border);
       border-radius: 28px;
       box-shadow: var(--shadow);
-      padding: 28px 22px 24px;
+      padding: clamp(16px, 4vw, 24px) clamp(16px, 4vw, 22px) clamp(16px, 4vw, 22px);
       text-align: center;
     }
 
     .logo-wrapper {
-      width: 112px;
-      height: 112px;
-      border-radius: 999px;
-      margin: 0 auto 14px;
-      background: #fff;
-      border: 2px solid #e5d6c6;
+      width: 100%;
+      max-width: clamp(180px, 52vw, 250px);
+      aspect-ratio: 16 / 6;
+      margin: 0 auto clamp(8px, 2.5vw, 14px);
+      background: transparent;
       overflow: hidden;
-      display: grid;
-      place-items: center;
     }
 
     .logo-wrapper img {
       width: 100%;
       height: 100%;
+      display: block;
       object-fit: cover;
-    }
-
-    h1 {
-      margin: 6px 0 8px;
-      font-size: 1.8rem;
-      letter-spacing: 0.4px;
-      color: var(--brand);
+      object-position: center;
     }
 
     p {
-      margin: 0 0 20px;
+      margin: 0 0 clamp(12px, 2.6vw, 18px);
       color: var(--muted);
       font-size: 0.98rem;
       line-height: 1.45;
@@ -88,8 +80,8 @@
 
     .links {
       display: grid;
-      gap: 12px;
-      margin-top: 8px;
+      gap: clamp(10px, 2vw, 12px);
+      margin-top: 0;
     }
 
     .link-btn {
@@ -122,10 +114,9 @@
 <body>
   <main class="card">
     <div class="logo-wrapper">
-      <img src="assets/logo-certart.png" alt="Logo Cer.Art" />
+      <img src="assets/logo-certart.png" alt="Cer.Art — peças de cerâmica e artesanato" width="1024" height="853" decoding="async" />
     </div>
 
-    <h1>Cer.Art</h1>
     <p>Peças de cerâmica e artesanato feitas com muito carinho, trazendo a magia do universo infantil e o encanto dos bichinhos de pano. Escolha um canal abaixo para comprar ou falar com a gente.</p>
 
     <section id="cta-links" class="links" aria-label="Links principais">
