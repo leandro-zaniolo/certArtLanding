@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cer.Art | Links</title>
   <meta name="description" content="Links oficiais da Cer.Art: Shopee, WhatsApp e TikTok Shop." />
+  <!-- Global Site Tag (gtag.js): substitua G-PSD81RS3QQ pelo seu Measurement ID (script externo + config abaixo). -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PSD81RS3QQ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -127,22 +128,58 @@
     <h1>Cer.Art</h1>
     <p>Peças de cerâmica e artesanato feitas com muito carinho, trazendo a magia do universo infantil e o encanto dos bichinhos de pano. Escolha um canal abaixo para comprar ou falar com a gente.</p>
 
-    <section class="links" aria-label="Links principais">
-      <a class="link-btn" data-link-name="shopee" href="https://br.shp.ee/tzdwR5fn" target="_blank" rel="noopener noreferrer">Shopee</a>
-      <a class="link-btn" data-link-name="whatsapp" href="https://wa.me/5511978533495" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-      <a class="link-btn" data-link-name="instagram" href="https://www.instagram.com/_cer.art?igsh=MTBpYmtrdGQwZmh3cw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <section id="cta-links" class="links" aria-label="Links principais">
+      <a
+        class="link-btn js-outbound-cta"
+        href="https://br.shp.ee/tzdwR5fn"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-link-name="shopee"
+        data-gtm-element="cta-shopee"
+        data-gtm-location="landing-main-card"
+        data-gtm-action="click_outbound_shopee"
+      >Shopee</a>
+      <a
+        class="link-btn js-outbound-cta"
+        href="https://wa.me/5511978533495"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-link-name="whatsapp"
+        data-gtm-element="cta-whatsapp"
+        data-gtm-location="landing-main-card"
+        data-gtm-action="click_outbound_whatsapp"
+      >WhatsApp</a>
+      <a
+        class="link-btn js-outbound-cta"
+        href="https://www.instagram.com/_cer.art?igsh=MTBpYmtrdGQwZmh3cw%3D%3D&utm_source=qr"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-link-name="instagram"
+        data-gtm-element="cta-instagram"
+        data-gtm-location="landing-main-card"
+        data-gtm-action="click_outbound_instagram"
+      >Instagram</a>
     </section>
 
     <footer>cer.art</footer>
   </main>
   <script>
-    document.querySelectorAll(".link-btn").forEach(function (link) {
-      link.addEventListener("click", function () {
+    document.querySelectorAll(".js-outbound-cta").forEach(function (el) {
+      el.addEventListener("click", function () {
         if (typeof gtag !== "function") return;
-        gtag("event", "link_click", {
-          link_name: link.dataset.linkName || link.textContent.trim().toLowerCase(),
-          link_url: link.href
-        });
+        var linkName =
+          el.dataset.linkName ||
+          el.dataset.gtmElement ||
+          el.textContent.trim().toLowerCase();
+        var payload = {
+          link_name: linkName,
+          link_url: el.href,
+          outbound: true
+        };
+        if (el.dataset.gtmElement) payload.gtm_element = el.dataset.gtmElement;
+        if (el.dataset.gtmLocation) payload.gtm_location = el.dataset.gtmLocation;
+        if (el.dataset.gtmAction) payload.gtm_action = el.dataset.gtmAction;
+        gtag("event", "link_click", payload);
       });
     });
   </script>
